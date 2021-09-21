@@ -1,30 +1,28 @@
 import { expect} from "chai";
 import supertest from 'supertest';
-// import { config } from
+
 
 describe('auth', function (){
-    const request = supertest('http://paysis.herokuapp.com');
+    const request = supertest(process.env.BASE_URL);
 
-    it('successful log in', function (done){
+    it('successful log in', function (){
         request
             .post('/auth')
-            .send({login: 'adminius', password: 'supers3cret'})
+            .send({login: process.env.LOGIN, password: process.env.PASSWORD})
             .end(function (eer, res){
                 expect(res.statusCode).to.eq(200);
                 expect(res.body.token).not.to.be.undefined;
-                done();
             });
 
     });
 
-    it('log in wrong credentials should return error', function (done){
+    it('log in wrong credentials should return error', function (){
         request
             .post('/auth')
             .send({login: 'wrong', password: 'wrong'})
             .end(function (err, res){
                 expect(res.statusCode).to.eq(404);
                 expect(res.body.message).to.eq('Wrong login or password.');
-                done();
             });
     });
 });
